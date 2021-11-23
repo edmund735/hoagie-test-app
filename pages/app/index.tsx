@@ -40,7 +40,6 @@ const App = (props) => {
       <b>2</b>
       <b>3</b>
       */}
-      {data && JSON.stringify(data.colleges)}
       {data && data.colleges.map(resCollege =>
         <MenuCard college={resCollege.name} menu={resCollege.menu} />
       )
