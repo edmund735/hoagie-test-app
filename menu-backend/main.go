@@ -51,7 +51,13 @@ func MenusHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	// TODO: Return the list of all the colleges and their menus
 	// Hint: check out the getCafeteriaContents function
-	fmt.Fprint(w, "Change this to cafeteria menus")
+	value, err := getCafeteriaContents()
+	if err != nil {
+		fmt.Fprint(w, "No access to cafeteria menus currently")
+	}
+
+
+	fmt.Fprint(w, value)
 }
 
 func MenuHandler(w http.ResponseWriter, r *http.Request) {

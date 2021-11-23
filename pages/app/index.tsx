@@ -2,54 +2,29 @@ import { Pane, Card, Button, Menu } from "evergreen-ui";
 import Link from "next/link";
 import { useUser } from '../../mock/UserProvider'
 import MenuCard from '../../components/MenuCard'
+import fetch from 'unfetch'
+import useSWR from 'swr'
+
+const fetcher = url => fetch(url).then(r => r.json())
 
 const App = (props) => {
-  let {user} = useUser();
-
-  let sampleMenu = [
-    ["Main Entree", ["Orange Beef with Broccoli"]],
-    ["Vegan", ["Pan-Asian Orange Tofu"]],
-    ["Soups", ["Cream of Mushroom Soup", "Minestrone Soup"]],
-    ["Salad Bar", ["Fresh Fruit Salad"]]
-  ]
-
-  let sampleMenu2 = [
-    ["Main Entree", ["Southern Fried Chicken"]],
-    ["Vegan", ["Baked Macaroni & Cheese"]],
-    ["Soups", ["Italian Wedding Soup", "Split Pea Soup"]],
-    ["Grill", ["Grilled Chicken","Onion Rings"]],
-    ["Dessert", ["Chocolate Cake"]]
-  ]
-
-  let resColleges = [
-    {
-      name: "Whitman",
-      menu: sampleMenu
-    },
-    {
-      name: "Wucox",
-      menu: sampleMenu2
-    },
-    {
-      name: "Forbes",
-      menu: sampleMenu
-    }
-  ]
+  let { user } = useUser();
+  const { data, error } = useSWR('/api/menus', fetcher)
 
   return <Pane>
     <Pane
       display="flex"
       paddingY={20}
-      justifyContent="center" 
+      justifyContent="center"
       width="100%"
     >
-        <p>
-          Hello there, <b>{`${user.name}`}</b>
-        </p>
-     </Pane>
-    <Pane 
-      display="flex" 
-      width="100%" 
+      <p>
+        Hello there, <b>{`${user.name}`}</b>
+      </p>
+    </Pane>
+    <Pane
+      display="flex"
+      width="100%"
       justifyContent="center"
       flexWrap="wrap"
     >
@@ -65,9 +40,10 @@ const App = (props) => {
       <b>2</b>
       <b>3</b>
       */}
-      { resColleges.map(resCollege => 
-          <MenuCard college={resCollege.name} menu={resCollege.menu}/>
-        )
+      {data && JSON.stringify(data.colleges)}
+      {data && data.colleges.map(resCollege =>
+        <MenuCard college={resCollege.name} menu={resCollege.menu} />
+      )
       }
     </Pane>
   </Pane>;
